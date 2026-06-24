@@ -20,3 +20,11 @@ Route::get('/menu', function () {
 Route::get('/kategori', function () {
     return view('kategori-index'); // <-- Pastikan kamu punya file resources/views/kategori-index.blade.php
 })->name('categories.index');
+
+Route::get('/', function () {
+    return view('welcome');
+})->name('home');
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');

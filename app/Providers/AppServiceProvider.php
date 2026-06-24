@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Livewire\Livewire; 
+use App\Livewire\MenuManager;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +25,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Paksa Livewire mengenali komponen menu-manager
+       // Livewire::component('menu-manager', MenuManager::class);
+
+        // Menjalankan konfigurasi bawaan Laravel
         $this->configureDefaults();
     }
 

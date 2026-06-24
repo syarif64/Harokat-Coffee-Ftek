@@ -90,11 +90,15 @@ body{
         Dashboard
     </a>
 
-   <a href="{{ route('menus.index') }}" class="menu-item">
-    <i class="bi bi-cup-hot"></i> Menu
 </a>
-    <a href="#" class="menu-item">
-    <i class="bi bi-tags"></i> Kategori
+    <a href="{{ route('menus.index') }}" class="menu-item">
+        <i class="bi bi-tags"></i> menu
+    </a>
+
+</a>
+    <a href="{{ route('categories.index') }}" class="menu-item">
+        <i class="bi bi-tags"></i> kategori
+    </a>
 </a>
 
     <a href="#" class="menu-item">

@@ -21,26 +21,29 @@ class MenuController extends Controller
         return view('menus.create');
     }
 
-    // Proses Menyimpan Data ke Database
+    // Proses Menyimpan Data
     public function store(Request $request)
     {
-        $request->validate([
-            'nama_menu' => 'required|string|max:255',
-            'kategori' => 'required|string',
+        $data = $request->validate([
+            'nama_menu' => 'required',
+            'kategori' => 'required',
             'harga' => 'required|numeric',
-            'deskripsi' => 'nullable|string',
-            'foto_produk' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Max 2MB
+            'foto_produk' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
-
-        $data = $request->all();
 
         // Proses upload foto jika ada
         if ($request->hasFile('foto_produk')) {
-            $path = $request->file('foto_produk')->store('menus', 'public');
-            $data['foto_produk'] = $path;
+            $data['foto_produk'] = $request->file('foto_produk')->store('menus', 'public');
         }
 
-        Menu::create($data);
+        // Simpan ke database
+        Menu::create([
+            'nama_menu'   => $request->nama_menu,
+            'kategori'    => $request->kategori,
+            'harga'       => $request->harga,
+            'deskripsi'   => $request->deskripsi,
+            'foto_produk' => $data['foto_produk'] ?? null
+        ]);
 
         return redirect()->route('menus.index')->with('success', 'Berhasil! Menu baru telah ditambahkan.');
     }
@@ -50,12 +53,11 @@ class MenuController extends Controller
     {
         $menu = Menu::findOrFail($id);
 
-        // Hapus file foto dari folder storage (jika ada)
+        // Hapus file foto dari storage jika ada (menggunakan nama kolom yang benar: foto_produk)
         if ($menu->foto_produk && Storage::disk('public')->exists($menu->foto_produk)) {
             Storage::disk('public')->delete($menu->foto_produk);
         }
 
-        // Hapus data dari database
         $menu->delete();
 
         return redirect()->route('menus.index')->with('success', 'Berhasil! Menu telah dihapus.');

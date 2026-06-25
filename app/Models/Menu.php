@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Menu extends Model
 {
     protected $fillable = [
-        'nama',
+        'nama_menu',
         'harga',
-        'gambar',
-        'category_id'
+        'foto_produk',
+        'kategori',
+        'deskripsi',
     ];
 
     public function category()

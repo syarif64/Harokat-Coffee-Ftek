@@ -64,3 +64,39 @@ select:focus[data-flux-control] {
 /* \[:where(&)\]:size-4 {
     @apply size-4;
 } */
+.btn-pesan-capsule {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Jarak antara ikon keranjang dan teks PESAN */
+    width: 100%;
+    padding: 11px 0;
+    
+    /* Gradasi Warna Karamel Metalik sesuai gambar */
+    background: linear-gradient(180deg, #ba864d 0%, #8c5a2b 100%); 
+    color: #ffffff;
+    
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px; /* Memberi jarak renggang antar-huruf agar elegan */
+    
+    /* Border Emas Tipis & Bentuk Lonjong Kapsul */
+    border: 2px solid #d4a36a; 
+    border-radius: 50px; /* Membuat bentuk oval/kapsul sempurna */
+    
+    box-shadow: 0 4px 10px rgba(140, 90, 43, 0.2);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Efek Berkilau/Terang saat Kursor Menyentuh Tombol */
+.btn-pesan-capsule:hover {
+    background: linear-gradient(180deg, #cc965c 0%, #a16b38 100%);
+    box-shadow: 0 6px 15px rgba(140, 90, 43, 0.35);
+}
+
+/* Efek Menekan ke dalam saat Diklik */
+.btn-pesan-capsule:active {
+    transform: scale(0.97);
+}

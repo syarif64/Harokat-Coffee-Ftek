@@ -8,58 +8,67 @@ use Illuminate\Support\Facades\Storage;
 
 class MenuController extends Controller
 {
-    // Halaman Tabel Admin
+    // Fungsi untuk menampilkan dashboard
+    public function dashboard()
+    {
+        $menus = Menu::where('is_ready', true)->get();
+        return view('dashboard', compact('menus'));
+    }
+
+    // Fungsi untuk menampilkan daftar menu di halaman index
     public function index()
     {
-        $menus = Menu::orderBy('created_at', 'desc')->get();
-        return view('menus.index', compact('menus'));
+        $menus = Menu::orderBy('id', 'desc')->get(); 
+        return view('menus.index', compact('menus')); 
     }
 
-    // Halaman Form Tambah Menu
+    // Fungsi untuk menampilkan form tambah menu
     public function create()
     {
-        return view('menus.create');
+        return view('menus.create'); 
     }
 
-    // Proses Menyimpan Data
+    // Fungsi untuk menyimpan menu baru
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'nama_menu' => 'required',
-            'kategori' => 'required',
-            'harga' => 'required|numeric',
+        $request->validate([
+            'nama_menu'   => 'required|string|max:255',
+            'kategori'    => 'required|string',
+            'harga'       => 'required|numeric',
+            'deskripsi'   => 'nullable|string',
             'foto_produk' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
-        // Proses upload foto jika ada
+        $data = $request->all();
+
         if ($request->hasFile('foto_produk')) {
-            $data['foto_produk'] = $request->file('foto_produk')->store('menus', 'public');
+            $data['foto_produk'] = $request->file('foto_produk')->store('menu-images', 'public');
         }
 
-        // Simpan ke database
-        Menu::create([
-            'nama_menu'   => $request->nama_menu,
-            'kategori'    => $request->kategori,
-            'harga'       => $request->harga,
-            'deskripsi'   => $request->deskripsi,
-            'foto_produk' => $data['foto_produk'] ?? null
-        ]);
+        $data['is_ready'] = true; 
+        Menu::create($data);
 
-        return redirect()->route('menus.index')->with('success', 'Berhasil! Menu baru telah ditambahkan.');
+        return redirect()->route('menus.index')->with('success', 'Menu berhasil ditambahkan!');
     }
 
-    // Proses Menghapus Data
+    // Fungsi untuk menghapus menu
     public function destroy($id)
     {
         $menu = Menu::findOrFail($id);
-
-        // Hapus file foto dari storage jika ada (menggunakan nama kolom yang benar: foto_produk)
-        if ($menu->foto_produk && Storage::disk('public')->exists($menu->foto_produk)) {
+        if ($menu->foto_produk) {
             Storage::disk('public')->delete($menu->foto_produk);
         }
-
         $menu->delete();
-
-        return redirect()->route('menus.index')->with('success', 'Berhasil! Menu telah dihapus.');
+        return redirect()->route('menus.index')->with('success', 'Menu berhasil dihapus!');
     }
+
+    // Fungsi untuk mengubah status tersedia/habis
+    public function toggleStatus($id)
+    {
+        $menu = Menu::findOrFail($id);
+        $menu->is_ready = !$menu->is_ready; 
+        $menu->save();
+        return redirect()->back()->with('success', 'Status menu diperbarui!');
+    }
+    
 }

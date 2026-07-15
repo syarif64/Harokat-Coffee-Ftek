@@ -1,57 +1,107 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Data Kategori</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAROKAT.COFFEE - Daftar Menu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-light">
 
-<div class="container mt-4">
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Daftar Menu Harokat Coffee</h2>
+        <a href="{{ route('menus.create') }}" class="btn text-white" style="background-color: #0d945a;">+ Tambah Menu Baru</a>
+    </div>
 
-    <h2>Data Kategori</h2>
-
-    <form action="{{ route('categories.store') }}" method="POST">
-        @csrf
-
-        <div class="mb-3">
-            <label>Nama Kategori</label>
-
-            <input type="text"
-                   name="name"
-                   class="form-control"
-                   required>
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+    @endif
 
-        <button class="btn btn-success">
-            Simpan Kategori
-        </button>
-    </form>
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <!-- Header kolom nomor urut dinamis -->
+                        <th class="py-3 ps-4">No.</th> 
+                        <th class="py-3">Foto</th>
+                        <th class="py-3">Nama Menu</th>
+                        <th class="py-3">Kategori</th>
+                        <th class="py-3">Harga</th>
+                        <th class="py-3">Deskripsi</th>
+                        <th class="px-4 py-3 text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($menus as $menu)
+                        <!-- Efek Visual: Baris meredup & berlatar merah soft jika status menu Habis -->
+                        <tr style="{{ !$menu->is_ready ? 'opacity: 0.6; background-color: #fff5f5;' : '' }}">
+                            
+                            <!-- 1. NOMOR URUT DINAMIS (Otomatis menyesuaikan jika ada menu yang dihapus) -->
+                            <td class="py-3 ps-4 align-middle">
+                                <strong>{{ $loop->iteration }}</strong>
+                            </td>
 
-    <hr>
+                            <td class="align-middle">
+                                @if($menu->foto_produk)
+                                    <img src="{{ asset('storage/' . $menu->foto_produk) }}" width="50" class="rounded border">
+                                @else
+                                    <span class="text-muted small">Tanpa Foto</span>
+                                @endif
+                            </td>
+                            
+                            <td class="align-middle">
+                                <span class="{{ !$menu->is_ready ? 'text-decoration-line-through text-muted' : '' }}">
+                                    {{ $menu->nama_menu }}
+                                </span>
+                                <!-- Badge status penanda menu habis -->
+                                @if(!$menu->is_ready)
+                                    <span class="badge bg-danger ms-1">Habis</span>
+                                @endif
+                            </td>
+                            
+                            <td class="align-middle">{{ $menu->kategori }}</td>
+                            <td class="align-middle">Rp {{ number_format($menu->harga, 0, ',', '.') }}</td>
+                            <td class="align-middle text-secondary">{{ $menu->deskripsi ?? '-' }}</td>
+                            
+                            <!-- KOLOM AKSI -->
+                            <td class="align-middle text-center">
+                                <div class="d-flex justify-content-center gap-2 align-items-center">
+                                    
+                                    <!-- 2. TOMBOL SET HABIS / TERSEDIA -->
+                                    <form action="{{ route('menus.toggleStatus', $menu->id) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn btn-sm {{ $menu->is_ready ? 'btn-warning' : 'btn-success' }}">
+                                            {{ $menu->is_ready ? 'Set Habis' : 'Set Tersedia' }}
+                                        </button>
+                                    </form>
 
-    <table class="table table-bordered">
-
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nama Kategori</th>
-            </tr>
-        </thead>
-
-        <tbody>
-
-            @foreach($categories as $category)
-            <tr>
-                <td>{{ $category->id }}</td>
-                <td>{{ $category->name }}</td>
-            </tr>
-            @endforeach
-
-        </tbody>
-
-    </table>
-
+                                    <!-- 3. TOMBOL HAPUS -->
+                                    <form action="{{ route('menus.destroy', $menu->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus menu ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+                                    </form>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-muted">Belum ada menu yang ditambahkan.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

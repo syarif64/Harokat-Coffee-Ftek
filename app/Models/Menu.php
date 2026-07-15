@@ -6,7 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Menu extends Model
 {
-    protected $fillable = [
+    
+
+protected $primaryKey = 'id';
+protected $fillable = [
         'nama_menu',
         'harga',
         'foto_produk',
@@ -18,4 +21,5 @@ class Menu extends Model
     {
         return $this->belongsTo(Category::class);
     }
+    
 }

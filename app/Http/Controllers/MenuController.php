@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\Storage;
 
 class MenuController extends Controller
 {
-    // Fungsi untuk menampilkan dashboard
+    // Fungsi untuk menampilkan dashboard (MENAMPILKAN SEMUA MENU)
     public function dashboard()
     {
-        $menus = Menu::where('is_ready', true)->get();
+        $menus = Menu::orderBy('id', 'desc')->get();
         return view('dashboard', compact('menus'));
     }
 
@@ -22,13 +22,12 @@ class MenuController extends Controller
         return view('menus.index', compact('menus')); 
     }
 
-    // Fungsi untuk menampilkan form tambah menu
+    // ... (Fungsi lainnya tetap sama)
     public function create()
     {
         return view('menus.create'); 
     }
 
-    // Fungsi untuk menyimpan menu baru
     public function store(Request $request)
     {
         $request->validate([
@@ -51,7 +50,6 @@ class MenuController extends Controller
         return redirect()->route('menus.index')->with('success', 'Menu berhasil ditambahkan!');
     }
 
-    // Fungsi untuk menghapus menu
     public function destroy($id)
     {
         $menu = Menu::findOrFail($id);
@@ -62,7 +60,6 @@ class MenuController extends Controller
         return redirect()->route('menus.index')->with('success', 'Menu berhasil dihapus!');
     }
 
-    // Fungsi untuk mengubah status tersedia/habis
     public function toggleStatus($id)
     {
         $menu = Menu::findOrFail($id);
@@ -70,5 +67,4 @@ class MenuController extends Controller
         $menu->save();
         return redirect()->back()->with('success', 'Status menu diperbarui!');
     }
-    
 }

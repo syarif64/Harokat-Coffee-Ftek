@@ -2,40 +2,25 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\PesananController;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+// 1. HALAMAN UTAMA (Dashboard)
+Route::get('/', [MenuController::class, 'dashboard'])->name('dashboard');
+Route::get('/dashboard', [MenuController::class, 'dashboard'])->name('dashboard.view');
 
-// Dashboard Route
-Route::get('/dashboard', [MenuController::class, 'dashboard'])->name('dashboard');
-
-Route::get('/', function () {
-    return redirect('/menu');
+// 2. ☕ MANAJEMEN MENU
+Route::prefix('menu')->group(function () {
+    Route::get('/', [MenuController::class, 'index'])->name('menus.index');
+    Route::get('/create', [MenuController::class, 'create'])->name('menus.create');
+    Route::post('/', [MenuController::class, 'store'])->name('menus.store');
+    Route::delete('/{id}', [MenuController::class, 'destroy'])->name('menus.destroy');
+    Route::patch('/{id}/toggle-status', [MenuController::class, 'toggleStatus'])->name('menus.toggleStatus');
 });
 
+// 3. 📦 PRODUK & KATEGORI
+Route::get('/produk', function () { return view('produk-index'); })->name('produk.index');
+Route::get('/kategori', function () { return view('kategori-index'); })->name('categories.index');
 
-Route::get('/produk', function () {
-    return view('produk-index');
-})->name('produk.index');
-
-// ☕ MANAJEMEN MENU
-// 1. Menampilkan Tabel Daftar Menu
-Route::get('/menu', [MenuController::class, 'index'])->name('menus.index');
-
-// 2. Menampilkan Form Tambah Menu
-Route::get('/menus/create', [MenuController::class, 'create'])->name('menus.create');
-
-// 3. Proses Menyimpan Data ke Database
-Route::post('/menus', [MenuController::class, 'store'])->name('menus.store');
-
-// 4. Proses Menghapus Menu
-Route::delete('/menu/{id}', [MenuController::class, 'destroy'])->name('menus.destroy');
-
-// 5. Proses Mengubah Status Menu (Tersedia / Habis)
-Route::patch('/menu/{id}/toggle-status', [MenuController::class, 'toggleStatus'])->name('menus.toggleStatus');
-
-// 📂 MANAJEMEN KATEGORI
-Route::get('/kategori', function () {
-    return view('kategori-index');
-})->name('categories.index');
+// 4. 📦 PESANAN (Sudah dirapikan)
+Route::get('/pesanan', [PesananController::class, 'index'])->name('pesanan.index');
+Route::post('/pesanan', [PesananController::class, 'store'])->name('pesanan.store');

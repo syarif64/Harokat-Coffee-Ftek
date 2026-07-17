@@ -14,7 +14,7 @@
                     <td class="py-3 px-4">{{ $menu->nama_menu }}</td>
                     <td class="py-3 px-4">
                         <span class="inline-flex items-center px-2 py-1 rounded bg-zinc-100 text-sm">
-                            {{ $menu->category->nama_kategori ?? 'Umum' }}
+                            {{ $menu->category->name ?? 'Umum' }}
                         </span>
                     </td>
                     <td class="py-3 px-4">Rp {{ number_format($menu->harga, 0, ',', '.') }}</td>

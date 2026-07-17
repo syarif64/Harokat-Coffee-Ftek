@@ -12,7 +12,7 @@ class Category extends Model
      * Pastikan nama kolom 'nama_kategori' sesuai dengan yang ada di tabel database kamu.
      */
     protected $fillable = [
-        'nama_kategori',
+        'name',
     ];
 
     /**

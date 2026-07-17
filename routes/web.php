@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PesananController;
+use App\Http\Controllers\CategoryController;
 
 // 1. HALAMAN UTAMA (Dashboard)
 Route::get('/', [MenuController::class, 'dashboard'])->name('dashboard');
@@ -19,7 +20,10 @@ Route::prefix('menu')->group(function () {
 
 // 3. 📦 PRODUK & KATEGORI
 Route::get('/produk', function () { return view('produk-index'); })->name('produk.index');
-Route::get('/kategori', function () { return view('kategori-index'); })->name('categories.index');
+Route::get('/kategori', [CategoryController::class, 'index'])->name('categories.index');
+Route::post('/kategori', [CategoryController::class, 'store'])->name('categories.store');
+Route::put('/kategori/{id}', [CategoryController::class, 'update'])->name('categories.update');
+Route::delete('/kategori/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
 // 4. 📦 PESANAN (Sudah dirapikan)
 Route::get('/pesanan', [PesananController::class, 'index'])->name('pesanan.index');

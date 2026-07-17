@@ -13,13 +13,13 @@ protected $fillable = [
         'nama_menu',
         'harga',
         'foto_produk',
-        'kategori',
+        'category_id',
         'deskripsi',
     ];
 
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id');
     }
     
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Menu;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -25,14 +26,15 @@ class MenuController extends Controller
     // ... (Fungsi lainnya tetap sama)
     public function create()
     {
-        return view('menus.create'); 
+        $categories = Category::all();
+        return view('menus.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'nama_menu'   => 'required|string|max:255',
-            'kategori'    => 'required|string',
+            'category_id' => 'required|exists:categories,id',
             'harga'       => 'required|numeric',
             'deskripsi'   => 'nullable|string',
             'foto_produk' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'

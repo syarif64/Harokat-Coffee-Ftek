@@ -28,12 +28,11 @@
 
                 <div class="mb-3">
                     <label class="form-label">Kategori</label>
-                    <select class="form-select" name="kategori" required>
+                    <select class="form-select" name="category_id" required>
                         <option selected disabled>Pilih Kategori</option>
-                        <option value="espresso">Espresso Based</option>
-                        <option value="manual_brew">Manual Brew</option>
-                        <option value="non_coffee">Non Coffee</option>
-                        <option value="snack">Snack</option>
+                        @foreach($categories as $cat)
+                            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                        @endforeach
                     </select>
                 </div>
 

@@ -53,7 +53,7 @@
                                     {{ $menu->nama_menu }}
                                 </span>
                             </td>
-                            <td class="align-middle">{{ $menu->kategori }}</td>
+                            <td class="align-middle">{{ $menu->category->name ?? '-' }}</td>
                             <td class="align-middle">Rp {{ number_format($menu->harga, 0, ',', '.') }}</td>
                             <td class="align-middle text-secondary">{{ $menu->deskripsi ?? '-' }}</td>
                             <td class="align-middle text-center">
